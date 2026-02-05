@@ -173,7 +173,6 @@
     </div>
 
     <div class="layout">
-      <!-- Left: 3 boards -->
       <div class="card">
         <div class="inner">
 
@@ -214,7 +213,6 @@
         </div>
       </div>
 
-      <!-- Right: current selection -->
       <div class="card">
         <div class="inner">
           <div class="sectionTitle"><span class="dot"></span>Current Selection</div>
@@ -238,12 +236,11 @@
 
         </div>
       </div>
-
     </div>
   </div>
 
 <script>
-  // Calculation coefficients (not displayed)
+  // Major coefficients
   const COEF_MAJOR = {
     "Basketball": 2.22222,
     "Choir": -2.66667,
@@ -255,6 +252,13 @@
     "Tennis": 2.22222,
     "Track": 2.22222,
     "Violin": -2.66667
+  };
+
+  // Type coefficients (triggered if any item selected in that group)
+  const COEF_TYPE = {
+    "Music": 3.66667,
+    "Sport (a)": -1.22222,
+    "Sport (e)": -1.22222
   };
 
   // Grouping (EDIT HERE if needed)
@@ -313,10 +317,10 @@
 
   function toggle(item, groupName) {
     if (!selected[groupName]) return;
+
     if (selected[groupName].has(item)) selected[groupName].delete(item);
     else selected[groupName].add(item);
 
-    // update chip styles for that group
     const map = {
       "Music": "musicChoices",
       "Sport (a)": "sportAChoices",
@@ -324,7 +328,6 @@
     };
     setChipSelected(document.getElementById(map[groupName]), selected[groupName]);
 
-    // reset score display until next calculate
     document.getElementById("scoreOut").textContent = "—";
     updateSelectionPanel();
   }
@@ -336,14 +339,25 @@
     document.getElementById("selSportE").textContent = toText(selected["Sport (e)"]);
   }
 
+  // ✅ Correct logic:
+  // score = sum(major coefs) + sum(type coef once if any major selected in that type)
   function calculate() {
     let score = 0;
+
     Object.keys(selected).forEach(group => {
+      // add type once if group has any selection
+      if (selected[group].size > 0) {
+        const t = COEF_TYPE[group];
+        if (typeof t === "number") score += t;
+      }
+
+      // add each selected major
       selected[group].forEach(item => {
         const c = COEF_MAJOR[item];
         if (typeof c === "number") score += c;
       });
     });
+
     document.getElementById("scoreOut").textContent = score.toFixed(5);
   }
 
