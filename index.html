@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Major Activities</title>
+  <style>
+    :root{
+      --bg:#0b1020;
+      --text:#e8ecff;
+      --muted:#a9b2dd;
+      --stroke:rgba(255,255,255,.10);
+      --stroke2:rgba(255,255,255,.16);
+      --accent:#6ea8ff;
+      --accent2:#9b7bff;
+      --good:#2ee59d;
+      --shadow: 0 18px 45px rgba(0,0,0,.35);
+      --radius:18px;
+    }
+    *{ box-sizing:border-box; }
+    body{
+      margin:0; padding:28px;
+      font-family: Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(1200px 500px at 15% -10%, rgba(110,168,255,.28), transparent 60%),
+        radial-gradient(900px 500px at 95% 0%, rgba(155,123,255,.24), transparent 55%),
+        radial-gradient(1000px 700px at 55% 120%, rgba(46,229,157,.10), transparent 60%),
+        var(--bg);
+      min-height:100vh;
+    }
+    .wrap{ max-width: 1100px; margin:0 auto; }
+    .header{ margin-bottom:16px; }
+    h1{ margin:0; font-size:22px; letter-spacing:.2px; }
+
+    .layout{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:14px;
+    }
+    @media (min-width: 980px){
+      .layout{ grid-template-columns: 1.15fr .85fr; }
+    }
+
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+      border:1px solid var(--stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card .inner{ padding:18px; }
+
+    .sectionTitle{
+      font-size:14px; font-weight:800; margin:0 0 10px;
+      display:flex; align-items:center; gap:10px;
+    }
+    .dot{
+      width:9px; height:9px; border-radius:999px;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      box-shadow: 0 0 0 3px rgba(110,168,255,.15);
+    }
+    .divider{
+      height:1px; background: var(--stroke);
+      margin:16px -18px;
+    }
+
+    .choices{
+      display:flex; flex-wrap:wrap; gap:10px;
+    }
+    .chip{
+      position:relative;
+      display:inline-flex; align-items:center; gap:10px;
+      padding:10px 12px;
+      border-radius: 999px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.03);
+      cursor:pointer;
+      user-select:none;
+      transition: transform .04s ease, border-color .15s ease, background .15s ease;
+      font-size:14px;
+    }
+    .chip:hover{ border-color: var(--stroke2); }
+    .chip:active{ transform: scale(0.992); }
+    .chip input{ display:none; }
+
+    .chip .mark{
+      width:16px; height:16px; border-radius:6px;
+      border:1px solid var(--stroke2);
+      background: rgba(0,0,0,.18);
+      display:inline-flex; align-items:center; justify-content:center;
+      flex: 0 0 auto;
+    }
+    .chip .mark::after{
+      content:"";
+      width:8px; height:8px; border-radius:3px;
+      background: transparent;
+      transform: scale(0.6);
+      transition: background .15s ease, transform .15s ease;
+    }
+    .chip[data-selected="true"]{
+      border-color: rgba(110,168,255,.55);
+      background: rgba(110,168,255,.12);
+    }
+    .chip[data-selected="true"] .mark{
+      border-color: rgba(110,168,255,.75);
+      background: rgba(110,168,255,.18);
+    }
+    .chip[data-selected="true"] .mark::after{
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      transform: scale(1.0);
+    }
+
+    .actions{
+      display:flex; flex-wrap:wrap; gap:10px;
+      align-items:center; justify-content:space-between;
+      margin-top: 14px;
+    }
+    .btnRow{ display:flex; gap:10px; flex-wrap:wrap; }
+    button{
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.04);
+      color:var(--text);
+      padding:10px 14px;
+      border-radius: 12px;
+      cursor:pointer;
+      font-size:14px;
+      transition: transform .04s ease, border-color .15s ease, background .15s ease;
+    }
+    button:hover{ border-color: var(--stroke2); }
+    button:active{ transform: scale(0.992); }
+    .primary{
+      border-color: rgba(110,168,255,.55);
+      background: rgba(110,168,255,.14);
+    }
+    .danger{
+      border-color: rgba(255,120,120,.45);
+      background: rgba(255,120,120,.10);
+    }
+
+    .result{
+      display:flex; align-items:center; gap:12px;
+      padding:12px 14px;
+      border-radius: 14px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.03);
+      min-width: 260px;
+    }
+    .badge{
+      width:34px; height:34px; border-radius: 12px;
+      display:flex; align-items:center; justify-content:center;
+      background: rgba(46,229,157,.12);
+      border:1px solid rgba(46,229,157,.28);
+    }
+    .badge svg{ width:18px; height:18px; }
+    .k{ font-size:12px; color:var(--muted); margin:0; }
+    .v{ font-size:18px; font-weight:800; margin:2px 0 0; letter-spacing:.2px; font-variant-numeric: tabular-nums; }
+
+    .panelCard{
+      box-shadow:none;
+      background:rgba(255,255,255,.03);
+      border-color:var(--stroke);
+    }
+    .subtle{ font-size:12px; color:var(--muted); }
+    .list{ margin-top:8px; line-height:1.7; }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <div class="header">
+      <h1>Major Activities</h1>
+    </div>
+
+    <div class="layout">
+      <!-- Left: 3 boards -->
+      <div class="card">
+        <div class="inner">
+
+          <div class="sectionTitle"><span class="dot"></span>Music</div>
+          <div class="choices" id="musicChoices"></div>
+
+          <div class="divider"></div>
+
+          <div class="sectionTitle"><span class="dot"></span>Sport (a)</div>
+          <div class="choices" id="sportAChoices"></div>
+
+          <div class="divider"></div>
+
+          <div class="sectionTitle"><span class="dot"></span>Sport (e)</div>
+          <div class="choices" id="sportEChoices"></div>
+
+          <div class="actions">
+            <div class="btnRow">
+              <button class="primary" id="calcBtn">Calculate</button>
+              <button id="clearBtn">Clear</button>
+              <button class="danger" id="resetBtn">Reset</button>
+            </div>
+
+            <div class="result">
+              <div class="badge" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M9 12l2 2 4-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  <path d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z" stroke="currentColor" stroke-width="2"/>
+                </svg>
+              </div>
+              <div>
+                <p class="k">Your Score</p>
+                <p class="v" id="scoreOut">—</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Right: current selection -->
+      <div class="card">
+        <div class="inner">
+          <div class="sectionTitle"><span class="dot"></span>Current Selection</div>
+
+          <div class="card panelCard">
+            <div class="inner">
+              <div class="subtle">Music</div>
+              <div class="list" id="selMusic">—</div>
+
+              <div class="divider" style="margin:14px -18px;"></div>
+
+              <div class="subtle">Sport (a)</div>
+              <div class="list" id="selSportA">—</div>
+
+              <div class="divider" style="margin:14px -18px;"></div>
+
+              <div class="subtle">Sport (e)</div>
+              <div class="list" id="selSportE">—</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+  // Calculation coefficients (not displayed)
+  const COEF_MAJOR = {
+    "Basketball": 2.22222,
+    "Choir": -2.66667,
+    "Drums": -2.66667,
+    "Games": 2.22222,
+    "Guitar": -2.66667,
+    "Piano": -2.66667,
+    "Swimming": 2.22222,
+    "Tennis": 2.22222,
+    "Track": 2.22222,
+    "Violin": -2.66667
+  };
+
+  // Grouping (EDIT HERE if needed)
+  const GROUPS = {
+    "Music": ["Choir", "Drums", "Guitar", "Piano", "Violin"],
+    "Sport (a)": ["Basketball", "Tennis", "Track"],
+    "Sport (e)": ["Swimming", "Games"]
+  };
+
+  const selected = {
+    "Music": new Set(),
+    "Sport (a)": new Set(),
+    "Sport (e)": new Set()
+  };
+
+  function chip(label, group) {
+    const el = document.createElement("label");
+    el.className = "chip";
+    el.dataset.selected = "false";
+
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.value = label;
+
+    const mark = document.createElement("span");
+    mark.className = "mark";
+
+    const text = document.createElement("span");
+    text.textContent = label;
+
+    el.appendChild(input);
+    el.appendChild(mark);
+    el.appendChild(text);
+
+    el.addEventListener("click", (e) => {
+      e.preventDefault();
+      toggle(label, group);
+    });
+
+    return el;
+  }
+
+  function setChipSelected(container, valueSet) {
+    Array.from(container.children).forEach(el => {
+      const name = el.querySelector("span:last-child").textContent;
+      el.dataset.selected = valueSet.has(name) ? "true" : "false";
+    });
+  }
+
+  function renderGroup(groupName, containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = "";
+    (GROUPS[groupName] || []).forEach(item => container.appendChild(chip(item, groupName)));
+    setChipSelected(container, selected[groupName]);
+  }
+
+  function toggle(item, groupName) {
+    if (!selected[groupName]) return;
+    if (selected[groupName].has(item)) selected[groupName].delete(item);
+    else selected[groupName].add(item);
+
+    // update chip styles for that group
+    const map = {
+      "Music": "musicChoices",
+      "Sport (a)": "sportAChoices",
+      "Sport (e)": "sportEChoices"
+    };
+    setChipSelected(document.getElementById(map[groupName]), selected[groupName]);
+
+    // reset score display until next calculate
+    document.getElementById("scoreOut").textContent = "—";
+    updateSelectionPanel();
+  }
+
+  function updateSelectionPanel() {
+    const toText = (s) => (s.size ? Array.from(s).sort().join(", ") : "—");
+    document.getElementById("selMusic").textContent = toText(selected["Music"]);
+    document.getElementById("selSportA").textContent = toText(selected["Sport (a)"]);
+    document.getElementById("selSportE").textContent = toText(selected["Sport (e)"]);
+  }
+
+  function calculate() {
+    let score = 0;
+    Object.keys(selected).forEach(group => {
+      selected[group].forEach(item => {
+        const c = COEF_MAJOR[item];
+        if (typeof c === "number") score += c;
+      });
+    });
+    document.getElementById("scoreOut").textContent = score.toFixed(5);
+  }
+
+  function clearAllSelections() {
+    Object.keys(selected).forEach(g => selected[g].clear());
+    renderAll();
+    document.getElementById("scoreOut").textContent = "—";
+    updateSelectionPanel();
+  }
+
+  function resetAll() {
+    clearAllSelections();
+  }
+
+  function renderAll() {
+    renderGroup("Music", "musicChoices");
+    renderGroup("Sport (a)", "sportAChoices");
+    renderGroup("Sport (e)", "sportEChoices");
+  }
+
+  document.getElementById("calcBtn").addEventListener("click", calculate);
+  document.getElementById("clearBtn").addEventListener("click", clearAllSelections);
+  document.getElementById("resetBtn").addEventListener("click", resetAll);
+
+  renderAll();
+  updateSelectionPanel();
+</script>
+</body>
+</html>
