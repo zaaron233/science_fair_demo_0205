@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Major Activities</title>
+  <title>How Fast Do You Responde?</title>
+
   <style>
     :root{
       --bg:#0b1020;
@@ -13,9 +14,9 @@
       --stroke2:rgba(255,255,255,.16);
       --accent:#6ea8ff;
       --accent2:#9b7bff;
-      --good:#2ee59d;
       --shadow: 0 18px 45px rgba(0,0,0,.35);
       --radius:18px;
+      --danger:#ff7a7a;
     }
     *{ box-sizing:border-box; }
     body{
@@ -29,17 +30,24 @@
         var(--bg);
       min-height:100vh;
     }
-    .wrap{ max-width: 1100px; margin:0 auto; }
-    .header{ margin-bottom:16px; }
+    .wrap{ max-width: 980px; margin:0 auto; }
+
+    .header{
+      margin-bottom:16px;
+      text-align:center;
+    }
     h1{ margin:0; font-size:22px; letter-spacing:.2px; }
+    .subhead{
+      margin:6px 0 0;
+      font-size:13px;
+      color:var(--muted);
+      letter-spacing:.3px;
+    }
 
     .layout{
       display:grid;
       grid-template-columns: 1fr;
       gap:14px;
-    }
-    @media (min-width: 980px){
-      .layout{ grid-template-columns: 1.15fr .85fr; }
     }
 
     .card{
@@ -65,14 +73,139 @@
       margin:16px -18px;
     }
 
+    /* ===== Survey ===== */
+    .surveyBox{
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.03);
+      border-radius: 14px;
+      padding:14px;
+    }
+    .surveyGrid{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+    }
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+    }
+    .labelRow{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .label{
+      font-size:12px;
+      color: var(--muted);
+      font-weight:700;
+      letter-spacing:.2px;
+    }
+    .valuePill{
+      font-size:12px;
+      color: var(--text);
+      border:1px solid var(--stroke);
+      background: rgba(0,0,0,.18);
+      padding:4px 8px;
+      border-radius: 999px;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+    .textInput, .numInput{
+      width:100%;
+      padding:10px 12px;
+      border-radius: 12px;
+      border:1px solid var(--stroke);
+      background: rgba(0,0,0,.18);
+      color: var(--text);
+      outline:none;
+      font-size:14px;
+    }
+    .textInput::placeholder{ color: rgba(169,178,221,.75); }
+
+    .radioRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+    }
+    .radioChip{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:9px 12px;
+      border-radius: 999px;
+      border:1px solid var(--stroke);
+      background: rgba(255,255,255,.03);
+      cursor:pointer;
+      user-select:none;
+      font-size:14px;
+    }
+    .radioChip input{ display:none; }
+    .radioChip[data-checked="true"]{
+      border-color: rgba(110,168,255,.55);
+      background: rgba(110,168,255,.12);
+    }
+
+    .subNote{
+      font-size:12px;
+      color: rgba(169,178,221,.9);
+      line-height:1.5;
+    }
+
+    .rangeRow{
+      display:grid;
+      grid-template-columns: 1fr 140px;
+      gap:10px;
+      align-items:center;
+    }
+    @media (max-width: 480px){
+      .rangeRow{ grid-template-columns: 1fr; }
+    }
+    input[type="range"]{
+      width:100%;
+      accent-color: var(--accent);
+    }
+
+    .hidden{ display:none !important; }
+
+    /* Required / error UI */
+    .errorBanner{
+      border:1px solid rgba(255,122,122,.45);
+      background: rgba(255,122,122,.10);
+      color: var(--text);
+      border-radius: 14px;
+      padding:10px 12px;
+      margin-bottom:12px;
+      font-size:13px;
+      line-height:1.5;
+      display:none;
+    }
+    .isError .textInput,
+    .isError .numInput{
+      border-color: rgba(255,122,122,.70);
+      box-shadow: 0 0 0 3px rgba(255,122,122,.10);
+    }
+    .radioError{
+      border:1px solid rgba(255,122,122,.70);
+      border-radius: 14px;
+      padding:8px;
+      background: rgba(255,122,122,.06);
+    }
+
+    /* ===== Activities vertical list ===== */
     .choices{
-      display:flex; flex-wrap:wrap; gap:10px;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
     }
     .chip{
       position:relative;
-      display:inline-flex; align-items:center; gap:10px;
+      display:flex;
+      align-items:center;
+      gap:10px;
       padding:10px 12px;
-      border-radius: 999px;
+      border-radius: 14px;
       border:1px solid var(--stroke);
       background: rgba(255,255,255,.03);
       cursor:pointer;
@@ -83,7 +216,6 @@
     .chip:hover{ border-color: var(--stroke2); }
     .chip:active{ transform: scale(0.992); }
     .chip input{ display:none; }
-
     .chip .mark{
       width:16px; height:16px; border-radius:6px;
       border:1px solid var(--stroke2);
@@ -111,9 +243,20 @@
       transform: scale(1.0);
     }
 
+    .othersBox{
+      margin-top:10px;
+      padding:12px;
+      border:1px dashed rgba(255,255,255,.18);
+      border-radius: 14px;
+      background: rgba(0,0,0,.12);
+    }
+
+    /* Buttons row */
     .actions{
-      display:flex; flex-wrap:wrap; gap:10px;
-      align-items:center; justify-content:space-between;
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      align-items:center;
       margin-top: 14px;
     }
     .btnRow{ display:flex; gap:10px; flex-wrap:wrap; }
@@ -138,140 +281,409 @@
       background: rgba(255,120,120,.10);
     }
 
-    .result{
-      display:flex; align-items:center; gap:12px;
-      padding:12px 14px;
-      border-radius: 14px;
-      border:1px solid var(--stroke);
-      background: rgba(255,255,255,.03);
-      min-width: 260px;
+    /* Interpretation */
+    .fullWidthCard{
+      grid-column: 1 / -1;
     }
-    .badge{
-      width:34px; height:34px; border-radius: 12px;
-      display:flex; align-items:center; justify-content:center;
-      background: rgba(46,229,157,.12);
-      border:1px solid rgba(46,229,157,.28);
+    .interpText{
+      margin:0;
+      font-size:15px;
+      line-height:1.7;
+      color:var(--text);
     }
-    .badge svg{ width:18px; height:18px; }
-    .k{ font-size:12px; color:var(--muted); margin:0; }
-    .v{ font-size:18px; font-weight:800; margin:2px 0 0; letter-spacing:.2px; font-variant-numeric: tabular-nums; }
-
-    .panelCard{
-      box-shadow:none;
-      background:rgba(255,255,255,.03);
-      border-color:var(--stroke);
+    .interpHint{
+      margin-top:10px;
+      font-size:13px;
+      color:var(--muted);
+      line-height:1.6;
     }
-    .subtle{ font-size:12px; color:var(--muted); }
-    .list{ margin-top:8px; line-height:1.7; }
   </style>
 </head>
 
 <body>
   <div class="wrap">
     <div class="header">
-      <h1>Major Activities</h1>
+      <h1>How Fast Do You Respond?</h1>
+      <p class="subhead">Get Your Average Response Time Measurement Based on Our Neural Network Model</p>
     </div>
 
     <div class="layout">
       <div class="card">
         <div class="inner">
 
+          <div class="errorBanner" id="errorBanner">
+            Please complete all required questions (1–7) before calculating.
+          </div>
+
+          <!-- Survey -->
+          <div class="surveyBox" id="surveyBox">
+            <div class="surveyGrid">
+
+              <!-- 1 -->
+              <div class="field" id="fieldName">
+                <div class="labelRow">
+                  <div class="label">1) Your name <span style="color:rgba(255,122,122,.9)">*</span></div>
+                </div>
+                <input class="textInput" id="qName" type="text" placeholder="Type your name" />
+              </div>
+
+              <!-- 2 -->
+              <div class="field" id="fieldGender">
+                <div class="labelRow">
+                  <div class="label">2) Your gender <span style="color:rgba(255,122,122,.9)">*</span></div>
+                </div>
+                <div class="radioRow" id="qGender">
+                  <label class="radioChip" data-checked="false">
+                    <input type="radio" name="gender" value="Male" />
+                    Male
+                  </label>
+                  <label class="radioChip" data-checked="false">
+                    <input type="radio" name="gender" value="Female" />
+                    Female
+                  </label>
+                </div>
+              </div>
+
+              <!-- 3 -->
+              <div class="field" id="fieldCoffeeYN">
+                <div class="labelRow">
+                  <div class="label">3) Do you drink coffee? <span style="color:rgba(255,122,122,.9)">*</span></div>
+                </div>
+                <div class="radioRow" id="qCoffeeYesNo">
+                  <label class="radioChip" data-checked="false">
+                    <input type="radio" name="coffeeYesNo" value="Yes" />
+                    Yes
+                  </label>
+                  <label class="radioChip" data-checked="false">
+                    <input type="radio" name="coffeeYesNo" value="No" />
+                    No
+                  </label>
+                </div>
+                <div class="subNote" style="margin-top:2px;">
+                  If Yes, answer the next question. (1 cup = 20 fl oz)
+                </div>
+              </div>
+
+              <!-- 3.1 -->
+              <div class="field hidden" id="qCoffeeCupsWrap">
+                <div class="labelRow">
+                  <div class="label">3.1) Cups per day (1 cup = 20 fl oz) <span style="color:rgba(255,122,122,.9)">*</span></div>
+                  <div class="valuePill"><span id="coffeeCupsOut">1</span> cups/day</div>
+                </div>
+                <div class="rangeRow">
+                  <input id="qCoffeeCupsRange" type="range" min="0" max="12" step="1" value="1" />
+                  <input class="numInput" id="qCoffeeCupsNum" type="number" min="0" max="12" step="1" value="1" />
+                </div>
+              </div>
+
+              <!-- 4 -->
+              <div class="field" id="fieldSleep">
+                <div class="labelRow">
+                  <div class="label">4) Average sleep per day (hours) <span style="color:rgba(255,122,122,.9)">*</span></div>
+                  <div class="valuePill"><span id="sleepOut">8</span> hrs</div>
+                </div>
+                <div class="rangeRow">
+                  <input id="qSleepRange" type="range" min="0" max="14" step="1" value="8" />
+                  <input class="numInput" id="qSleepNum" type="number" min="0" max="14" step="1" value="8" />
+                </div>
+              </div>
+
+              <!-- 5 -->
+              <div class="field" id="fieldFreeTime">
+                <div class="labelRow">
+                  <div class="label">5) After-class activity time per day (hours) <span style="color:rgba(255,122,122,.9)">*</span></div>
+                  <div class="valuePill"><span id="freeTimeOut">2</span> hrs</div>
+                </div>
+                <div class="rangeRow">
+                  <input id="qFreeTimeRange" type="range" min="0" max="12" step="1" value="2" />
+                  <input class="numInput" id="qFreeTimeNum" type="number" min="0" max="12" step="1" value="2" />
+                </div>
+              </div>
+
+              <!-- 6 -->
+              <div class="field" id="fieldAcadStress">
+                <div class="labelRow">
+                  <div class="label">
+                    6) Academic stress (1–10, 1 = least, 10 = most) <span style="color:rgba(255,122,122,.9)">*</span>
+                  </div>
+                  <div class="valuePill"><span id="acadStressOut">1</span> / 10 — <span id="acadStressLabel">Very relaxed</span></div>
+                </div>
+                <div class="rangeRow">
+                  <input id="qAcadStressRange" type="range" min="1" max="10" step="1" value="1" />
+                  <input class="numInput" id="qAcadStressNum" type="number" min="1" max="10" step="1" value="1" />
+                </div>
+              </div>
+
+              <!-- 7 -->
+              <div class="field" id="fieldOtherStress">
+                <div class="labelRow">
+                  <div class="label">
+                    7) Other stress (1–10, 1 = least, 10 = most) <span style="color:rgba(255,122,122,.9)">*</span>
+                  </div>
+                  <div class="valuePill"><span id="otherStressOut">1</span> / 10 — <span id="otherStressLabel">Very relaxed</span></div>
+                </div>
+                <div class="rangeRow">
+                  <input id="qOtherStressRange" type="range" min="1" max="10" step="1" value="1" />
+                  <input class="numInput" id="qOtherStressNum" type="number" min="1" max="10" step="1" value="1" />
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- Activities -->
           <div class="sectionTitle"><span class="dot"></span>Music</div>
           <div class="choices" id="musicChoices"></div>
+          <div class="othersBox hidden" id="musicOthersBox">
+            <div class="label" style="margin-bottom:6px;">Music — Others (please describe)</div>
+            <input class="textInput" id="musicOthersInput" type="text" placeholder="Type your answer..." />
+          </div>
 
           <div class="divider"></div>
 
-          <div class="sectionTitle"><span class="dot"></span>Sport (a)</div>
-          <div class="choices" id="sportAChoices"></div>
+          <div class="sectionTitle"><span class="dot"></span>Physical activities</div>
+          <div class="choices" id="physicalChoices"></div>
+          <div class="othersBox hidden" id="physicalOthersBox">
+            <div class="label" style="margin-bottom:6px;">Physical activities — Others (please describe)</div>
+            <input class="textInput" id="physicalOthersInput" type="text" placeholder="Type your answer..." />
+          </div>
 
           <div class="divider"></div>
 
-          <div class="sectionTitle"><span class="dot"></span>Sport (e)</div>
-          <div class="choices" id="sportEChoices"></div>
+          <div class="sectionTitle"><span class="dot"></span>Digital activities</div>
+          <div class="choices" id="digitalChoices"></div>
+          <div class="othersBox hidden" id="digitalOthersBox">
+            <div class="label" style="margin-bottom:6px;">Digital activities — Others (please describe)</div>
+            <input class="textInput" id="digitalOthersInput" type="text" placeholder="Type your answer..." />
+          </div>
 
           <div class="actions">
             <div class="btnRow">
               <button class="primary" id="calcBtn">Calculate</button>
-              <button id="clearBtn">Clear</button>
               <button class="danger" id="resetBtn">Reset</button>
             </div>
-
-            <div class="result">
-              <div class="badge" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none">
-                  <path d="M9 12l2 2 4-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M20 12a8 8 0 11-16 0 8 8 0 0116 0z" stroke="currentColor" stroke-width="2"/>
-                </svg>
-              </div>
-              <div>
-                <p class="k">Your Score</p>
-                <p class="v" id="scoreOut">—</p>
-              </div>
-            </div>
           </div>
 
         </div>
       </div>
 
-      <div class="card">
+      <!-- Interpretation -->
+      <div class="card fullWidthCard" id="resultBox" style="display:none;">
         <div class="inner">
-          <div class="sectionTitle"><span class="dot"></span>Current Selection</div>
-
-          <div class="card panelCard">
-            <div class="inner">
-              <div class="subtle">Music</div>
-              <div class="list" id="selMusic">—</div>
-
-              <div class="divider" style="margin:14px -18px;"></div>
-
-              <div class="subtle">Sport (a)</div>
-              <div class="list" id="selSportA">—</div>
-
-              <div class="divider" style="margin:14px -18px;"></div>
-
-              <div class="subtle">Sport (e)</div>
-              <div class="list" id="selSportE">—</div>
-            </div>
-          </div>
-
+          <div class="sectionTitle"><span class="dot"></span>Score Interpretation</div>
+          <p class="interpText" id="resultText"></p>
+          <div class="interpHint" id="resultHint"></div>
         </div>
       </div>
+
     </div>
   </div>
 
 <script>
-  // Major coefficients
+  // =========================
+  // Survey state (NOT used in regression yet)
+  // Required: 1-7 must be answered
+  // Defaults:
+  // 4 sleep = 8
+  // 5 free time = 2
+  // 6 acad stress = 1
+  // 7 other stress = 1
+  // =========================
+  const survey = {
+    name: "",
+    gender: "",
+    coffeeYesNo: "",
+    coffeeCups: 1,
+    sleepHours: 8,
+    freeTimeHours: 2,
+    acadStress: 1,
+    otherStress: 1
+  };
+
+  function setRadioVisual(containerId) {
+    const wrap = document.getElementById(containerId);
+    if (!wrap) return;
+    Array.from(wrap.querySelectorAll(".radioChip")).forEach(chip => {
+      const input = chip.querySelector("input");
+      chip.dataset.checked = (input && input.checked) ? "true" : "false";
+    });
+  }
+
+  function clampInt(x, min, max) {
+    const n = Number(x);
+    if (Number.isNaN(n)) return min;
+    const rounded = Math.round(n);
+    return Math.max(min, Math.min(max, rounded));
+  }
+
+  function bindIntRangeAndNumber({ rangeId, numId, outId, min, max, onChange }) {
+    const range = document.getElementById(rangeId);
+    const num = document.getElementById(numId);
+    const out = outId ? document.getElementById(outId) : null;
+
+    function setAll(val) {
+      const v = clampInt(val, min, max);
+      if (range) range.value = String(v);
+      if (num) num.value = String(v);
+      if (out) out.textContent = String(v);
+      if (typeof onChange === "function") onChange(v);
+    }
+
+    if (range) range.addEventListener("input", () => setAll(range.value));
+    if (num) num.addEventListener("input", () => setAll(num.value));
+
+    setAll(range ? range.value : (num ? num.value : min));
+  }
+
+  // Stress label mapping (used for the "x/10 — Text" pill)
+  function stressLabel(v){
+    const n = clampInt(v, 1, 10);
+    if (n <= 2) return "Very relaxed";
+    if (n <= 4) return "Slight stress";
+    if (n <= 6) return "Moderate stress";
+    if (n <= 8) return "High stress";
+    return "Extremely stressed";
+  }
+
+  function updateStressPill(kind, v){
+    const n = clampInt(v, 1, 10);
+    if (kind === "acad") {
+      document.getElementById("acadStressOut").textContent = String(n);
+      document.getElementById("acadStressLabel").textContent = stressLabel(n);
+    } else {
+      document.getElementById("otherStressOut").textContent = String(n);
+      document.getElementById("otherStressLabel").textContent = stressLabel(n);
+    }
+  }
+
+  // Q1 Name (required)
+  const qName = document.getElementById("qName");
+  qName.addEventListener("input", () => { survey.name = qName.value.trim(); });
+
+  // Q2 Gender (required)
+  Array.from(document.querySelectorAll('#qGender .radioChip')).forEach(chip => {
+    chip.addEventListener("click", () => {
+      const input = chip.querySelector("input");
+      input.checked = true;
+      survey.gender = input.value;
+      setRadioVisual("qGender");
+    });
+  });
+
+  // Q3 Coffee yes/no (required)
+  const coffeeWrap = document.getElementById("qCoffeeCupsWrap");
+  function updateCoffeeVisibility() {
+    coffeeWrap.classList.toggle("hidden", !(survey.coffeeYesNo === "Yes"));
+  }
+  Array.from(document.querySelectorAll('#qCoffeeYesNo .radioChip')).forEach(chip => {
+    chip.addEventListener("click", () => {
+      const input = chip.querySelector("input");
+      input.checked = true;
+      survey.coffeeYesNo = input.value;
+      setRadioVisual("qCoffeeYesNo");
+      updateCoffeeVisibility();
+    });
+  });
+
+  // Q3.1 Coffee cups (integer only; required if coffeeYesNo=Yes)
+  bindIntRangeAndNumber({
+    rangeId:"qCoffeeCupsRange", numId:"qCoffeeCupsNum", outId:"coffeeCupsOut",
+    min:0, max:12,
+    onChange:(v)=>{ survey.coffeeCups = v; }
+  });
+
+  // Q4 Sleep (integer only; required; default 8)
+  bindIntRangeAndNumber({
+    rangeId:"qSleepRange", numId:"qSleepNum", outId:"sleepOut",
+    min:0, max:14,
+    onChange:(v)=>{ survey.sleepHours = v; }
+  });
+
+  // Q5 Free time (integer only; required; default 2)
+  bindIntRangeAndNumber({
+    rangeId:"qFreeTimeRange", numId:"qFreeTimeNum", outId:"freeTimeOut",
+    min:0, max:12,
+    onChange:(v)=>{ survey.freeTimeHours = v; }
+  });
+
+  // Q6 Academic stress (integer only; required; default 1)
+  bindIntRangeAndNumber({
+    rangeId:"qAcadStressRange", numId:"qAcadStressNum", outId:null,
+    min:1, max:10,
+    onChange:(v)=>{ survey.acadStress = v; updateStressPill("acad", v); }
+  });
+
+  // Q7 Other stress (integer only; required; default 1)
+  bindIntRangeAndNumber({
+    rangeId:"qOtherStressRange", numId:"qOtherStressNum", outId:null,
+    min:1, max:10,
+    onChange:(v)=>{ survey.otherStress = v; updateStressPill("other", v); }
+  });
+
+  // Init visuals
+  setRadioVisual("qGender");
+  setRadioVisual("qCoffeeYesNo");
+  updateCoffeeVisibility();
+  updateStressPill("acad", survey.acadStress);
+  updateStressPill("other", survey.otherStress);
+
+  // =========================
+  // Activities & scoring
+  // =========================
   const COEF_MAJOR = {
-    "Basketball": 2.22222,
+    // Music
     "Choir": -2.66667,
     "Drums": -2.66667,
-    "Games": 2.22222,
     "Guitar": -2.66667,
     "Piano": -2.66667,
-    "Swimming": 2.22222,
+    "Violin": -2.66667,
+
+    // Physical
+    "Basketball": 2.22222,
     "Tennis": 2.22222,
     "Track": 2.22222,
-    "Violin": -2.66667
+    "Swimming": 2.22222,
+    "Running": 0,
+    "Cycling": 0,
+    "Weightlifting / Gym": 0,
+    "Badminton": 0,
+    "Soccer": 0,
+
+    // Digital
+    "Video Games": 2.22222,
+    "Streaming / Watching Videos": 0,
+    "Social Media": 0,
+    "Coding / Programming": 0,
+    "Online Courses": 0,
+
+    // Others
+    "Others": 0
   };
 
-  // Type coefficients (triggered if any item selected in that group)
   const COEF_TYPE = {
     "Music": 3.66667,
-    "Sport (a)": -1.22222,
-    "Sport (e)": -1.22222
+    "Physical activities": -1.22222,
+    "Digital activities": -1.22222
   };
 
-  // Grouping (EDIT HERE if needed)
   const GROUPS = {
-    "Music": ["Choir", "Drums", "Guitar", "Piano", "Violin"],
-    "Sport (a)": ["Basketball", "Tennis", "Track"],
-    "Sport (e)": ["Swimming", "Games"]
+    "Music": ["Choir", "Drums", "Guitar", "Piano", "Violin", "Others"],
+    "Physical activities": ["Basketball", "Tennis", "Track", "Swimming", "Running", "Cycling", "Weightlifting / Gym", "Badminton", "Soccer", "Others"],
+    "Digital activities": ["Video Games", "Streaming / Watching Videos", "Social Media", "Coding / Programming", "Online Courses", "Others"]
   };
 
   const selected = {
     "Music": new Set(),
-    "Sport (a)": new Set(),
-    "Sport (e)": new Set()
+    "Physical activities": new Set(),
+    "Digital activities": new Set()
+  };
+
+  const othersText = {
+    "Music": "",
+    "Physical activities": "",
+    "Digital activities": ""
   };
 
   function chip(label, group) {
@@ -315,6 +727,22 @@
     setChipSelected(container, selected[groupName]);
   }
 
+  function setOthersVisibility(groupName) {
+    const show = selected[groupName].has("Others");
+    if (groupName === "Music") document.getElementById("musicOthersBox").classList.toggle("hidden", !show);
+    if (groupName === "Physical activities") document.getElementById("physicalOthersBox").classList.toggle("hidden", !show);
+    if (groupName === "Digital activities") document.getElementById("digitalOthersBox").classList.toggle("hidden", !show);
+  }
+
+  function hideInterpretation() {
+    const box = document.getElementById("resultBox");
+    const text = document.getElementById("resultText");
+    const hint = document.getElementById("resultHint");
+    box.style.display = "none";
+    text.innerHTML = "";
+    hint.textContent = "";
+  }
+
   function toggle(item, groupName) {
     if (!selected[groupName]) return;
 
@@ -323,67 +751,268 @@
 
     const map = {
       "Music": "musicChoices",
-      "Sport (a)": "sportAChoices",
-      "Sport (e)": "sportEChoices"
+      "Physical activities": "physicalChoices",
+      "Digital activities": "digitalChoices"
     };
     setChipSelected(document.getElementById(map[groupName]), selected[groupName]);
 
-    document.getElementById("scoreOut").textContent = "—";
-    updateSelectionPanel();
+    if (item === "Others") setOthersVisibility(groupName);
+
+    hideInterpretation();
   }
 
-  function updateSelectionPanel() {
-    const toText = (s) => (s.size ? Array.from(s).sort().join(", ") : "—");
-    document.getElementById("selMusic").textContent = toText(selected["Music"]);
-    document.getElementById("selSportA").textContent = toText(selected["Sport (a)"]);
-    document.getElementById("selSportE").textContent = toText(selected["Sport (e)"]);
+  document.getElementById("musicOthersInput").addEventListener("input", (e) => { othersText["Music"] = e.target.value; });
+  document.getElementById("physicalOthersInput").addEventListener("input", (e) => { othersText["Physical activities"] = e.target.value; });
+  document.getElementById("digitalOthersInput").addEventListener("input", (e) => { othersText["Digital activities"] = e.target.value; });
+
+  // =========================
+  // Required validation for questions 1-7
+  // =========================
+  function clearErrors(){
+    document.getElementById("errorBanner").style.display = "none";
+    ["fieldName","fieldGender","fieldCoffeeYN","fieldSleep","fieldFreeTime","fieldAcadStress","fieldOtherStress"].forEach(id=>{
+      document.getElementById(id).classList.remove("isError");
+    });
+    document.getElementById("qGender").classList.remove("radioError");
+    document.getElementById("qCoffeeYesNo").classList.remove("radioError");
+    document.getElementById("qCoffeeCupsWrap").classList.remove("isError");
   }
 
-  // ✅ Correct logic:
-  // score = sum(major coefs) + sum(type coef once if any major selected in that type)
+  function showErrorBanner(){
+    document.getElementById("errorBanner").style.display = "block";
+  }
+
+  function firstInvalidScrollTo(el){
+    if (!el) return;
+    el.scrollIntoView({ behavior:"smooth", block:"center" });
+  }
+
+  function validateRequired(){
+    clearErrors();
+
+    const invalidEls = [];
+
+    // 1) name
+    const nameVal = (qName.value || "").trim();
+    if (!nameVal) {
+      document.getElementById("fieldName").classList.add("isError");
+      invalidEls.push(document.getElementById("fieldName"));
+    }
+
+    // 2) gender
+    const genderChecked = document.querySelector('input[name="gender"]:checked');
+    if (!genderChecked) {
+      document.getElementById("fieldGender").classList.add("isError");
+      document.getElementById("qGender").classList.add("radioError");
+      invalidEls.push(document.getElementById("fieldGender"));
+    }
+
+    // 3) coffee yes/no
+    const coffeeChecked = document.querySelector('input[name="coffeeYesNo"]:checked');
+    if (!coffeeChecked) {
+      document.getElementById("fieldCoffeeYN").classList.add("isError");
+      document.getElementById("qCoffeeYesNo").classList.add("radioError");
+      invalidEls.push(document.getElementById("fieldCoffeeYN"));
+    }
+
+    // 4) sleep
+    const sleepNum = document.getElementById("qSleepNum");
+    const sleepV = clampInt(sleepNum.value, 0, 14);
+    if (sleepNum.value === "" || Number.isNaN(Number(sleepNum.value))) {
+      document.getElementById("fieldSleep").classList.add("isError");
+      invalidEls.push(document.getElementById("fieldSleep"));
+    }
+
+    // 5) free time
+    const freeNum = document.getElementById("qFreeTimeNum");
+    const freeV = clampInt(freeNum.value, 0, 12);
+    if (freeNum.value === "" || Number.isNaN(Number(freeNum.value))) {
+      document.getElementById("fieldFreeTime").classList.add("isError");
+      invalidEls.push(document.getElementById("fieldFreeTime"));
+    }
+
+    // 6) academic stress
+    const acadNum = document.getElementById("qAcadStressNum");
+    const acadV = clampInt(acadNum.value, 1, 10);
+    if (acadNum.value === "" || Number.isNaN(Number(acadNum.value))) {
+      document.getElementById("fieldAcadStress").classList.add("isError");
+      invalidEls.push(document.getElementById("fieldAcadStress"));
+    }
+
+    // 7) other stress
+    const otherNum = document.getElementById("qOtherStressNum");
+    const otherV = clampInt(otherNum.value, 1, 10);
+    if (otherNum.value === "" || Number.isNaN(Number(otherNum.value))) {
+      document.getElementById("fieldOtherStress").classList.add("isError");
+      invalidEls.push(document.getElementById("fieldOtherStress"));
+    }
+
+    // If coffee = Yes, cups must be present
+    if (coffeeChecked && coffeeChecked.value === "Yes") {
+      const cupsNum = document.getElementById("qCoffeeCupsNum");
+      if (cupsNum.value === "" || Number.isNaN(Number(cupsNum.value))) {
+        document.getElementById("qCoffeeCupsWrap").classList.add("isError");
+        invalidEls.push(document.getElementById("qCoffeeCupsWrap"));
+      }
+    }
+
+    if (invalidEls.length > 0) {
+      showErrorBanner();
+      firstInvalidScrollTo(invalidEls[0]);
+      return false;
+    }
+
+    // Sync survey state
+    survey.name = nameVal;
+    survey.gender = genderChecked ? genderChecked.value : "";
+    survey.coffeeYesNo = coffeeChecked ? coffeeChecked.value : "";
+    survey.sleepHours = sleepV;
+    survey.freeTimeHours = freeV;
+    survey.acadStress = acadV;
+    survey.otherStress = otherV;
+
+    if (survey.coffeeYesNo === "Yes") {
+      const cupsV = clampInt(document.getElementById("qCoffeeCupsNum").value, 0, 12);
+      survey.coffeeCups = cupsV;
+    } else {
+      survey.coffeeCups = 0;
+    }
+
+    return true;
+  }
+
+  // =========================
+  // Calculate
+  // =========================
   function calculate() {
+    if (!validateRequired()) {
+      hideInterpretation();
+      return;
+    }
+
     let score = 0;
 
     Object.keys(selected).forEach(group => {
-      // add type once if group has any selection
       if (selected[group].size > 0) {
         const t = COEF_TYPE[group];
         if (typeof t === "number") score += t;
       }
-
-      // add each selected major
       selected[group].forEach(item => {
         const c = COEF_MAJOR[item];
         if (typeof c === "number") score += c;
       });
     });
 
-    document.getElementById("scoreOut").textContent = score.toFixed(5);
-  }
+    const finalScore = score.toFixed(5);
 
-  function clearAllSelections() {
-    Object.keys(selected).forEach(g => selected[g].clear());
-    renderAll();
-    document.getElementById("scoreOut").textContent = "—";
-    updateSelectionPanel();
+    let meaning = "xxx";
+    let extra = "xxx";
+
+    if (score >= 6) {
+      meaning = "xxx — Your profile looks highly activity-driven. You tend to commit strongly once you pick a direction.";
+      extra   = "Extra note: Strong momentum is great—try building a simple routine so your progress stays consistent.";
+    } else if (score >= 2) {
+      meaning = "xxx — Your selections suggest a balanced and adaptable style. You can switch contexts smoothly.";
+      extra   = "Extra note: Consider setting one main focus + one supporting habit to avoid spreading too thin.";
+    } else if (score >= -2) {
+      meaning = "xxx — Your choices look steady and selective, which often reflects thoughtful decision-making.";
+      extra   = "Extra note: If you want a stronger score signal, add one complementary activity that matches your strengths.";
+    } else {
+      meaning = "xxx — Your pattern is quite distinctive and may indicate specialization or strong personal taste.";
+      extra   = "Extra note: Clarify your goal (performance vs creativity vs enjoyment), then adjust selections to match it.";
+    }
+
+    const box = document.getElementById("resultBox");
+    const text = document.getElementById("resultText");
+    const hint = document.getElementById("resultHint");
+
+    text.innerHTML =
+      `<strong>You get ${finalScore} score.</strong><br>` +
+      `It means ${meaning}`;
+
+    hint.textContent = extra;
+
+    box.style.display = "block";
   }
 
   function resetAll() {
-    clearAllSelections();
+    clearErrors();
+
+    // reset survey state
+    survey.name = "";
+    survey.gender = "";
+    survey.coffeeYesNo = "";
+    survey.coffeeCups = 1;
+    survey.sleepHours = 8;
+    survey.freeTimeHours = 2;
+    survey.acadStress = 1;
+    survey.otherStress = 1;
+
+    // reset survey UI
+    document.getElementById("qName").value = "";
+
+    document.querySelectorAll('input[name="gender"]').forEach(r => r.checked = false);
+    document.querySelectorAll('input[name="coffeeYesNo"]').forEach(r => r.checked = false);
+    setRadioVisual("qGender");
+    setRadioVisual("qCoffeeYesNo");
+
+    document.getElementById("qCoffeeCupsRange").value = "1";
+    document.getElementById("qCoffeeCupsNum").value = "1";
+    document.getElementById("coffeeCupsOut").textContent = "1";
+
+    document.getElementById("qSleepRange").value = "8";
+    document.getElementById("qSleepNum").value = "8";
+    document.getElementById("sleepOut").textContent = "8";
+
+    document.getElementById("qFreeTimeRange").value = "2";
+    document.getElementById("qFreeTimeNum").value = "2";
+    document.getElementById("freeTimeOut").textContent = "2";
+
+    document.getElementById("qAcadStressRange").value = "1";
+    document.getElementById("qAcadStressNum").value = "1";
+    updateStressPill("acad", 1);
+
+    document.getElementById("qOtherStressRange").value = "1";
+    document.getElementById("qOtherStressNum").value = "1";
+    updateStressPill("other", 1);
+
+    updateCoffeeVisibility();
+
+    // reset activities selections
+    Object.keys(selected).forEach(g => selected[g].clear());
+    renderAll();
+
+    // reset Others inputs
+    othersText["Music"] = "";
+    othersText["Physical activities"] = "";
+    othersText["Digital activities"] = "";
+
+    document.getElementById("musicOthersInput").value = "";
+    document.getElementById("physicalOthersInput").value = "";
+    document.getElementById("digitalOthersInput").value = "";
+
+    document.getElementById("musicOthersBox").classList.add("hidden");
+    document.getElementById("physicalOthersBox").classList.add("hidden");
+    document.getElementById("digitalOthersBox").classList.add("hidden");
+
+    hideInterpretation();
   }
 
   function renderAll() {
     renderGroup("Music", "musicChoices");
-    renderGroup("Sport (a)", "sportAChoices");
-    renderGroup("Sport (e)", "sportEChoices");
+    renderGroup("Physical activities", "physicalChoices");
+    renderGroup("Digital activities", "digitalChoices");
+
+    setOthersVisibility("Music");
+    setOthersVisibility("Physical activities");
+    setOthersVisibility("Digital activities");
   }
 
   document.getElementById("calcBtn").addEventListener("click", calculate);
-  document.getElementById("clearBtn").addEventListener("click", clearAllSelections);
   document.getElementById("resetBtn").addEventListener("click", resetAll);
 
+  // initial render
   renderAll();
-  updateSelectionPanel();
 </script>
 </body>
 </html>
